@@ -1,51 +1,80 @@
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
-endif
-
 " --- Basic options --- {{{
 
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+if has('vim_starting')
+  " Use Vim settings, rather then Vi settings (much better!).
+  " This must be first, because it changes other options as a side effect.
+  set nocompatible
 
-set encoding=utf-8
-set langmenu=en_GB.UTF-8
-let $LANG = 'en_GB.UTF-8'
+  set encoding=utf-8
+  set langmenu=en_GB.UTF-8
+  let $LANG = 'en_GB.UTF-8'
 
-set fileformats=unix,dos
+  set fileformats=unix,dos
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+  " allow backspacing over everything in insert mode
+  set backspace=indent,eol,start
 
-set nobackup
-set history=50          " keep 50 lines of command line history
-set ruler               " show the cursor position all the time
-set showcmd             " display incomplete commands
-set incsearch           " do incremental searching
-set ignorecase          " ignore case while searching
-set smartcase           " unless one uses upper case letter
+  set nobackup
+  set history=50          " keep 50 lines of command line history
+  set ruler               " show the cursor position all the time
+  set showcmd             " display incomplete commands
+  set incsearch           " do incremental searching
+  set ignorecase          " ignore case while searching
+  set smartcase           " unless one uses upper case letter
 
-set tabstop=8
-set softtabstop=2
-set shiftwidth=2
-set expandtab
-set autowrite
-set autoread
-set smarttab
+  set tabstop=8
+  set softtabstop=2
+  set shiftwidth=2
+  set expandtab
+  set autowrite
+  set autoread
+  set smarttab
 
-set cino+=(0,u0,W2s,C1,l1
+  set cino+=(0,u0,W2s,C1,l1
 
-set textwidth=80
+  set textwidth=80
 
-set foldmethod=marker
-set foldminlines=10
-" set foldcolumn=2
+  set foldmethod=marker
+  set foldminlines=10
+  " set foldcolumn=2
 
-set listchars=tab:\|\ ,trail:·,precedes:<,extends:>,nbsp:¤
-set list
+  set listchars=tab:\|\ ,trail:·,precedes:<,extends:>,nbsp:¤
+  set list
 
-set grepprg=grep\ -niH
+  set grepprg=grep\ -niH
+
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+" --- NeoBundle --- {{{1
+
+call neobundle#rc(expand('~/.vim/bundle/'))
+
+NeoBundle 'Shougo/vimproc', {
+ \ 'build' : {
+ \     'windows' : 'make -f make_mingw32.mak',
+ \     'cygwin' : 'make -f make_cygwin.mak',
+ \     'mac' : 'make -f make_mac.mak',
+ \     'unix' : 'make -f make_unix.mak',
+ \    },
+ \ }
+NeoBundle 'Shougo/unite.vim'
+
+NeoBundle 'jnurmine/Zenburn'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'https://bitbucket.org/ns9tks/vim-l9', {'type': 'hg'}
+NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'type': 'hg'}
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'vim-scripts/a.vim'
+NeoBundle 'techlivezheng/vim-plugin-minibufexpl'
+NeoBundle 'jlanzarotta/bufexplorer'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'hewes/unite-gtags'
+NeoBundle 'lukerandall/haskellmode-vim'
+NeoBundle 'wlangstroth/vim-racket'
+NeoBundle 'Valloric/YouCompleteMe'
 
 " --- Omni completion options --- {{{1
 
@@ -98,33 +127,7 @@ function! ToggleLC(v1, v2)
   endif
 endfunction
 
-function! RecreateTags()
-  let ctags_cmd = g:Tlist_Ctags_Cmd
-  let ctags_args = ' --sort=yes --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q --totals=yes'
-
-  if file_readable('cscope.files')
-    silent !rm tags
-    execute '!cat cscope.files | xargs ' . ctags_cmd . ctags_args . ' --append=yes'
-  else
-    execute '!' . ctags_cmd . ctags_args . ' -R'
-  endif
-endfunction
-
-" Reload existing cscope.out connection, rebuilding the file
-function! ReloadCScope()
-  if !cscope_connection(2, "cscope.out")
-    return
-  endif
-
-  cscope kill cscope.out
-  !cscope -Rbq
-  cscope add cscope.out
-endfunction
-
 " --- Key bindings --- {{{1
-
-" Reloading tags and cscope.out
-noremap <silent> <Leader>s :call RecreateTags()<CR>:call ReloadCScope()<CR>
 
 " Toggle display of trailing spaces
 noremap <silent> <Leader>ds :call ToggleLC("trail:·", "trail: ")<CR>
@@ -282,7 +285,6 @@ if has("gui_running")
   let &columns = 100
   let &lines = 50
 
-  set guifont=Monaco:h12
+  set guifont=Consolas:h14
   :colorscheme zenburn
 endif
-
