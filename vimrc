@@ -67,8 +67,6 @@ NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'vim-scripts/a.vim'
-NeoBundle 'techlivezheng/vim-plugin-minibufexpl'
-NeoBundle 'jlanzarotta/bufexplorer'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'hewes/unite-gtags'
 NeoBundle 'lukerandall/haskellmode-vim'
@@ -90,12 +88,6 @@ let Tlist_GainFocus_On_ToggleOpen = 1
 let Tlist_Enable_Fold_Column = 0
 let Tlist_Close_On_Select = 1
 let Tlist_Sort_Type = "name"
-
-" --- Mini Buffer Explorer options --- {{{2
-
-let g:miniBufExplorerAutoStart = 0
-
-" }}}
 
 " --- CtrlP options --- {{{2
 
@@ -142,11 +134,11 @@ imap <C-e> <C-o>$
 
 
 " Buffer explorer
-noremap <silent> <F2> :BufExplorer<CR>
+noremap <silent> <F2> :Unite buffer<CR>
 inoremap <silent> <F2> <C-o><F2>
 
-noremap <silent> <Leader>t :MBEToggle
-noremap <silent> <Leader>f :MBEFocus
+noremap <silent> <S-F2> :Unite buffer_tab<CR>
+inoremap <silent> <S-F2> <C-o><S-F2>
 
 " Tag list
 noremap <silent> <F3> :TlistToggle<CR>
@@ -251,5 +243,11 @@ if has("gui_running")
   let &lines = 50
 
   set guifont=Consolas:h14
-  :colorscheme zenburn
+  :colorscheme solarized
+  set background=light
+endif
+
+let s:localvimrc = expand("~/.vim/localrc")
+if filereadable(s:localvimrc)
+  :source s:localvimrc
 endif
