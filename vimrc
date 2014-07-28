@@ -134,10 +134,10 @@ imap <C-e> <C-o>$
 
 
 " Buffer explorer
-noremap <silent> <F2> :Unite buffer<CR>
+noremap <silent> <F2> :Unite -start-insert buffer<CR>
 inoremap <silent> <F2> <C-o><F2>
 
-noremap <silent> <S-F2> :Unite buffer_tab<CR>
+noremap <silent> <S-F2> :Unite -start-insert buffer_tab<CR>
 inoremap <silent> <S-F2> <C-o><S-F2>
 
 " Tag list
@@ -147,6 +147,9 @@ imap <silent> <F3> <C-o><F3>
 " File explorer
 noremap <silent> <F4> :VimFilerExplorer<CR>
 imap <silent> <F4> <C-o><F4>
+
+" Choose different file from the same directory
+noremap <silent> <Leader>f :Unite -start-insert file<CR>
 
 " GNU Global
 noremap <silent> <Leader>sc :Unite gtags/context<CR>
