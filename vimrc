@@ -48,7 +48,8 @@ endif
 
 " --- NeoBundle --- {{{1
 
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'Shougo/vimproc', {
  \ 'build' : {
@@ -59,12 +60,10 @@ NeoBundle 'Shougo/vimproc', {
  \    },
  \ }
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimfiler.vim'
 
 NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'https://bitbucket.org/ns9tks/vim-l9', {'type': 'hg'}
-NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'type': 'hg'}
-NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'junegunn/vim-easy-align'
 NeoBundle 'vim-scripts/a.vim'
@@ -75,19 +74,10 @@ NeoBundle 'hewes/unite-gtags'
 NeoBundle 'lukerandall/haskellmode-vim'
 NeoBundle 'wlangstroth/vim-racket'
 NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'tpope/vim-fugitive'
 
-" --- Omni completion options --- {{{1
+call neobundle#end()
 
-let OmniCpp_NamespaceSearch = 1
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 1 " show function parameters
-let OmniCpp_MayCompleteDot = 1 " autocomplete after .
-let OmniCpp_MayCompleteArrow = 1 " autocomplete after ->
-let OmniCpp_MayCompleteScope = 1 " autocomplete after ::
-
-" automatically open and close the popup menu / preview window
-" au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 
 set completeopt=menuone,menu,longest,preview
 
@@ -103,13 +93,18 @@ let Tlist_Sort_Type = "name"
 
 " --- Mini Buffer Explorer options --- {{{2
 
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
+let g:miniBufExplorerAutoStart = 0
+
 " }}}
 
-let NERDTreeHijackNetrw = 0
+" --- CtrlP options --- {{{2
+
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_user_command = "find %s -type f -not -path '*.git*' -not -path '*.hg*'"
+let g:ctrlp_lazy_update = 50
+
+" }}}
+
 let python_highlight_all = 1
 
 " Configure browser for haskell_doc.vim
@@ -138,8 +133,6 @@ noremap <silent> <Leader>dt :call ToggleLC("tab:\| ", "tab:  ")<CR>
 noremap <Leader>c :nohlsearch<CR>
 " Reload file from disk
 noremap <Leader>r :e %<CR>
-noremap <F5> :e %<CR>
-imap <F5> <C-o><F5>
 
 " Toggle line wrap faster
 noremap  <Leader>w :set wrap!<CR>
@@ -152,56 +145,26 @@ imap <C-e> <C-o>$
 noremap <silent> <F2> :BufExplorer<CR>
 inoremap <silent> <F2> <C-o><F2>
 
+noremap <silent> <Leader>t :MBEToggle
+noremap <silent> <Leader>f :MBEFocus
+
 " Tag list
 noremap <silent> <F3> :TlistToggle<CR>
 imap <silent> <F3> <C-o><F3>
 
-" NERD Tree
-noremap <silent> <F4> :NERDTreeToggle<CR>
+" File explorer
+noremap <silent> <F4> :VimFilerExplorer<CR>
 imap <silent> <F4> <C-o><F4>
 
-" Fuzzy Finder keys
-nnoremap <silent> sj     :FufBuffer<CR>
-nnoremap <silent> sk     :FufFileWithCurrentBufferDir<CR>
-nnoremap <silent> sK     :FufFileWithFullCwd<CR>
-nnoremap <silent> s<C-k> :FufFile<CR>
-nnoremap <silent> sl     :FufCoverageFileChange<CR>
-nnoremap <silent> sL     :FufCoverageFileChange<CR>
-nnoremap <silent> s<C-l> :FufCoverageFileRegister<CR>
-nnoremap <silent> sd     :FufDirWithCurrentBufferDir<CR>
-nnoremap <silent> sD     :FufDirWithFullCwd<CR>
-nnoremap <silent> s<C-d> :FufDir<CR>
-nnoremap <silent> sn     :FufMruFile<CR>
-nnoremap <silent> sN     :FufMruFileInCwd<CR>
-nnoremap <silent> sm     :FufMruCmd<CR>
-nnoremap <silent> su     :FufBookmarkFile<CR>
-nnoremap <silent> s<C-u> :FufBookmarkFileAdd<CR>
-vnoremap <silent> s<C-u> :FufBookmarkFileAddAsSelectedText<CR>
-nnoremap <silent> si     :FufBookmarkDir<CR>
-nnoremap <silent> s<C-i> :FufBookmarkDirAdd<CR>
-nnoremap <silent> st     :FufTag<CR>
-nnoremap <silent> sT     :FufTag!<CR>
-nnoremap <silent> s<C-]> :FufTagWithCursorWord!<CR>
-nnoremap <silent> s,     :FufBufferTag<CR>
-nnoremap <silent> s<     :FufBufferTag!<CR>
-vnoremap <silent> s,     :FufBufferTagWithSelectedText!<CR>
-vnoremap <silent> s<     :FufBufferTagWithSelectedText<CR>
-nnoremap <silent> s}     :FufBufferTagWithCursorWord!<CR>
-nnoremap <silent> s.     :FufBufferTagAll<CR>
-nnoremap <silent> s>     :FufBufferTagAll!<CR>
-vnoremap <silent> s.     :FufBufferTagAllWithSelectedText!<CR>
-vnoremap <silent> s>     :FufBufferTagAllWithSelectedText<CR>
-nnoremap <silent> s]     :FufBufferTagAllWithCursorWord!<CR>
-nnoremap <silent> sg     :FufTaggedFile<CR>
-nnoremap <silent> sG     :FufTaggedFile!<CR>
-nnoremap <silent> so     :FufJumpList<CR>
-nnoremap <silent> sp     :FufChangeList<CR>
-nnoremap <silent> sq     :FufQuickfix<CR>
-nnoremap <silent> sy     :FufLine<CR>
-nnoremap <silent> sh     :FufHelp<CR>
-nnoremap <silent> se     :FufEditDataFile<CR>
-nnoremap <silent> sr     :FufRenewCache<CR>
+" GNU Global
+noremap <silent> <Leader>sc :Unite gtags/context<CR>
+noremap <silent> <Leader>sr :Unite gtags/ref<CR>
+noremap <silent> <Leader>sd :Unite gtags/def<CR>
+noremap <silent> <Leader>sg :Unite gtags/grep<CR>
+noremap <silent> <Leader>sl :Unite gtags/completion<CR>
 
+" YCM
+noremap <silent> <Leader>jd :YcmCompleter GoTo<CR>
 
 " Preview tag under cursor
 noremap <C-\>] <C-W>}
@@ -219,7 +182,6 @@ noremap <C-s> :w<CR>
 map Q gqap
 
 " }}}
-
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=a
@@ -276,6 +238,9 @@ else
   set autoindent                " always set autoindenting on
 
 endif " has("autocmd") }}}
+
+NeoBundleCheck
+
 
 if has("gui_running")
   " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
