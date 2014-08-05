@@ -192,6 +192,15 @@ endif
 
 " --- Auto Command settings --- {{{1
 
+" Fix detection of Objective-C++
+function! s:FTmm()
+  if match(getline(1, min([line("$"), 200])), '^\s*\(#\s*\(include\|import\)\>\|/\*\)') > -1
+    set filetype=objcpp
+  else
+    set filetype=nroff
+  endif
+endfunction
+
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
 
@@ -213,6 +222,9 @@ if has("autocmd")
 
   " Simple outlining
   autocmd BufRead,BufNewFile *.org setf outline | set ai foldmethod=syntax
+
+  " Recognise .mm files as Objective-C
+  autocmd BufRead,BufNewFile *.mm call s:FTmm()
 
   " Use ghc functionality for haskell files
   au BufEnter *.hs compiler ghc
@@ -250,7 +262,8 @@ if has("gui_running")
   set background=light
 endif
 
+" Additional local configuration
 let s:localvimrc = expand("~/.vim/localrc")
 if filereadable(s:localvimrc)
-  :source s:localvimrc
+  silent! execute 'source' s:localvimrc
 endif
