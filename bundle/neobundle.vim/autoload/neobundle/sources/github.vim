@@ -76,7 +76,7 @@ function! s:get_github_searches(string) "{{{
 
   if unite#util#get_last_status()
     call unite#print_message('[neobundle/search:github] ' . cmd)
-    call unite#print_error('[neobundle/search:github] Error occured!')
+    call unite#print_error('[neobundle/search:github] Error occurred!')
     call unite#print_error(result)
     return []
   elseif !filereadable(temp)
@@ -99,26 +99,6 @@ endfunction"}}}
 " @vimlint(EVL102, 0, l:true)
 " @vimlint(EVL102, 0, l:false)
 " @vimlint(EVL102, 0, l:null)
-
-function! s:convert_vim_scripts_data(data) "{{{
-  return map(copy(a:data), "{
-        \ 'name' : v:val.n,
-        \ 'raw_type' : v:val.t,
-        \ 'repository' : v:val.rv,
-        \ 'description' : printf('%-5s %s', v:val.rv, v:val.s),
-        \ 'uri' : 'https://github.com/vim-scripts/' . v:val.n,
-        \ }")
-endfunction"}}}
-
-function! s:convert2script_type(type) "{{{
-  if a:type ==# 'utility'
-    return 'plugin'
-  elseif a:type ==# 'color scheme'
-    return 'colors'
-  else
-    return a:type
-  endif
-endfunction"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

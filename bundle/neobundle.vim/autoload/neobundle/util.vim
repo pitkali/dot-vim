@@ -34,7 +34,7 @@ let s:is_mac = !s:is_windows
 
 function! neobundle#util#substitute_path_separator(path) "{{{
   return (s:is_windows && a:path =~ '\\') ?
-        \ substitute(a:path, '\\', '/', 'g') : a:path
+        \ tr(a:path, '\', '/') : a:path
 endfunction"}}}
 function! neobundle#util#expand(path) "{{{
   let path = (a:path =~ '^\~') ? fnamemodify(a:path, ':p') :
@@ -44,6 +44,32 @@ function! neobundle#util#expand(path) "{{{
   return (s:is_windows && path =~ '\\') ?
         \ neobundle#util#substitute_path_separator(path) : path
 endfunction"}}}
+function! neobundle#util#join_paths(path1, path2) "{{{
+  " Joins two paths together, handling the case where the second path
+  " is an absolute path.
+  if s:is_absolute(a:path2)
+    return a:path2
+  endif
+  if a:path1 =~ (s:is_windows ? '[\\/]$' : '/$') ||
+        \ a:path2 =~ (s:is_windows ? '^[\\/]' : '^/')
+    " the appropriate separator already exists
+    return a:path1 . a:path2
+  else
+    " note: I'm assuming here that '/' is always valid as a directory
+    " separator on Windows. I know Windows has paths that start with \\?\ that
+    " diasble behavior like that, but I don't know how Vim deals with that.
+    return a:path1 . '/' . a:path2
+  endif
+endfunction "}}}
+if s:is_windows
+  function! s:is_absolute(path) "{{{
+    return a:path =~ '^[\\/]\|^\a:'
+  endfunction "}}}
+else
+  function! s:is_absolute(path) "{{{
+    return a:path =~ "^/"
+  endfunction "}}}
+endif
 
 function! neobundle#util#is_windows() "{{{
   return s:is_windows
@@ -124,6 +150,25 @@ function! neobundle#util#join_rtp(list, runtimepath, rtp) "{{{
         \ join(a:list, ',') : join(map(copy(a:list), 's:escape(v:val)'), ',')
 endfunction"}}}
 
+function! neobundle#util#split_envpath(path) "{{{
+  let delimiter = neobundle#util#is_windows() ? ';' : ':'
+  if stridx(a:path, '\' . delimiter) < 0
+    return split(a:path, delimiter)
+  endif
+
+  let split = split(a:path, '\\\@<!\%(\\\\\)*\zs' . delimiter)
+  return map(split,'substitute(v:val, ''\\\([\\'
+        \ . delimiter . ']\)'', "\\1", "g")')
+endfunction"}}}
+
+function! neobundle#util#join_envpath(list, orig_path, add_path) "{{{
+  let delimiter = neobundle#util#is_windows() ? ';' : ':'
+  return (stridx(a:orig_path, '\' . delimiter) < 0
+        \ && stridx(a:add_path, delimiter) < 0) ?
+        \   join(a:list, delimiter) :
+        \   join(map(copy(a:list), 's:escape(v:val)'), delimiter)
+endfunction"}}}
+
 " Removes duplicates from a list.
 function! neobundle#util#uniq(list, ...) "{{{
   let list = a:0 ? map(copy(a:list), printf('[v:val, %s]', a:1)) : copy(a:list)
@@ -168,13 +213,23 @@ function! neobundle#util#convert2list(expr) "{{{
 endfunction"}}}
 
 function! neobundle#util#print_error(expr) "{{{
-  let msg = neobundle#util#convert2list(a:expr)
-  echohl WarningMsg | echomsg join(msg, "\n") | echohl None
+  return s:echo(a:expr, 1)
 endfunction"}}}
 
 function! neobundle#util#redraw_echo(expr) "{{{
+  return s:echo(a:expr, 0)
+endfunction"}}}
+
+function! s:echo(expr, is_error) "{{{
+  let msg = neobundle#util#convert2list(a:expr)
+
   if has('vim_starting')
-    echo join(neobundle#util#convert2list(a:expr), "\n")
+    let m = join(msg, "\n")
+    if a:is_error
+      echohl WarningMsg | echomsg m | echohl None
+    else
+      echo m
+    endif
     return
   endif
 
@@ -186,11 +241,16 @@ function! neobundle#util#redraw_echo(expr) "{{{
     set noshowcmd
     set noruler
 
-    let msg = neobundle#util#convert2list(a:expr)
     let height = max([1, &cmdheight])
     for i in range(0, len(msg)-1, height)
       redraw
-      echo join(msg[i : i+height-1], "\n")
+
+      let m = join(msg[i : i+height-1], "\n")
+      if a:is_error
+        echohl WarningMsg | echomsg m | echohl None
+      else
+        echo m
+      endif
     endfor
   finally
     let &more = more_save
@@ -200,7 +260,7 @@ function! neobundle#util#redraw_echo(expr) "{{{
 endfunction"}}}
 
 function! neobundle#util#name_conversion(path) "{{{
-  return fnamemodify(a:path, ':s?/$??:t:s?\c\.git\s*$??')
+  return fnamemodify(split(a:path, ':')[-1], ':s?/$??:t:s?\c\.git\s*$??')
 endfunction"}}}
 
 " Escape a path for runtimepath.
@@ -213,7 +273,9 @@ function! neobundle#util#unify_path(path) "{{{
 endfunction"}}}
 
 function! neobundle#util#cd(path) "{{{
-  execute 'lcd' fnameescape(a:path)
+  if isdirectory(a:path)
+    execute 'lcd' fnameescape(a:path)
+  endif
 endfunction"}}}
 
 function! neobundle#util#writefile(path, list) "{{{

@@ -21,7 +21,7 @@
 "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
-" Version: 3.0, for Vim 7.2
+" Version: 3.1, for Vim 7.2
 "=============================================================================
 
 let s:save_cpo = &cpo
@@ -94,7 +94,7 @@ command! -nargs=+ NeoBundleDirectInstall
 command! -nargs=* -bar
       \ -complete=customlist,neobundle#commands#complete_lazy_bundles
       \ NeoBundleSource
-      \ call neobundle#config#source([<f-args>])
+      \ call neobundle#commands#source([<f-args>])
 
 command! -nargs=+ -bar
       \ -complete=customlist,neobundle#commands#complete_bundles
@@ -147,6 +147,12 @@ command! -bar NeoBundleCount
 command! -bar NeoBundleSaveCache
       \ call neobundle#commands#save_cache()
 command! -bar NeoBundleLoadCache
+      \ call neobundle#util#print_error(
+      \ '[neobundle] NeoBundleLoadCache is deprecated command.') |
+      \ call neobundle#util#print_error(
+      \ '[neobundle] It will be removed in the next version.') |
+      \ call neobundle#util#print_error(
+      \ '[neobundle] Please use neobundle#load_cache() instead.') |
       \ call neobundle#commands#load_cache()
 command! -bar NeoBundleClearCache
       \ call neobundle#commands#clear_cache()
@@ -156,17 +162,25 @@ command! -nargs=1 -bar
       \ NeoBundleRollback
       \ call neobundle#commands#rollback(<f-args>)
 
+command! -nargs=+ NeoBundleLock
+      \ call neobundle#commands#lock(<f-args>)
+
 function! neobundle#rc(...) "{{{
-  let path = (a:0 > 0) ? a:1 :
-        \ get(filter(split(globpath(&runtimepath, 'bundle', 1), '\n'),
-        \ 'isdirectory(v:val)'), 0, '~/.vim/bundle')
-  return neobundle#init#_rc(path, 0)
+  call neobundle#util#print_error(
+        \ '[neobundle] neobundle#rc() is removed function.')
+  call neobundle#util#print_error(
+        \ '[neobundle] Please use neobundle#begin()/neobundle#end() instead.')
 endfunction"}}}
+
 function! neobundle#begin(...) "{{{
   let path = (a:0 > 0) ? a:1 :
         \ get(filter(split(globpath(&runtimepath, 'bundle', 1), '\n'),
-        \ 'isdirectory(v:val)'), 0, '~/.vim/bundle')
-  return neobundle#init#_rc(path, 1)
+        \ 'isdirectory(v:val)'), 0,
+        \ (has('nvim') ? '~/.nvim/bundle' : '~/.vim/bundle'))
+  return neobundle#init#_rc(path)
+endfunction"}}}
+function! neobundle#append() "{{{
+  call neobundle#config#append()
 endfunction"}}}
 function! neobundle#end() "{{{
   call neobundle#config#final()
@@ -177,7 +191,11 @@ function! neobundle#set_neobundle_dir(path)
 endfunction
 
 function! neobundle#get_neobundle_dir()
-  return s:neobundle_dir
+  let dir = s:neobundle_dir
+  if !isdirectory(dir)
+    call mkdir(dir, 'p')
+  endif
+  return dir
 endfunction
 
 function! neobundle#get_runtime_dir()
@@ -193,7 +211,15 @@ function! neobundle#get_tags_dir() "{{{
 endfunction"}}}
 
 function! neobundle#get_rtp_dir()
-  return s:neobundle_dir . '/.neobundle'
+  if s:neobundle_dir == ''
+    return ''
+  endif
+
+  let dir = s:neobundle_dir . '/.neobundle'
+  if !isdirectory(dir)
+    call mkdir(dir, 'p')
+  endif
+  return dir
 endfunction
 
 function! neobundle#source(bundle_names)
@@ -202,7 +228,7 @@ endfunction
 
 function! neobundle#local(localdir, ...)
   return neobundle#parser#local(
-        \ a:localdir, get(a:000, 0, {}), get(a:000, 1, []))
+        \ a:localdir, get(a:000, 0, {}), get(a:000, 1, ['*']))
 endfunction
 
 function! neobundle#exists_not_installed_bundles()
@@ -220,10 +246,29 @@ function! neobundle#is_sourced(name)
 endfunction
 
 function! neobundle#has_cache()
+  call neobundle#util#print_error(
+        \ '[neobundle] neobundle#has_cache() is deprecated function.')
+  call neobundle#util#print_error(
+        \ '[neobundle] It will be removed in the next version.')
+  call neobundle#util#print_error(
+        \ '[neobundle] Please use neobundle#load_cache() instead.')
+
   return filereadable(neobundle#commands#get_cache_file())
 endfunction
 
+function! neobundle#load_cache(...)
+  let vimrc = get(a:000, 0, $MYVIMRC)
+  return neobundle#commands#load_cache(vimrc)
+endfunction
+
 function! neobundle#has_fresh_cache(...)
+  call neobundle#util#print_error(
+        \ '[neobundle] neobundle#has_fresh_cache() is deprecated function.')
+  call neobundle#util#print_error(
+        \ '[neobundle] It will be removed in the next version.')
+  call neobundle#util#print_error(
+        \ '[neobundle] Please use neobundle#load_cache() instead.')
+
   " Check if the cache file is newer than the vimrc file.
   let vimrc = get(a:000, 0, $MYVIMRC)
   let cache = neobundle#commands#get_cache_file()
@@ -244,7 +289,7 @@ function! neobundle#get_not_installed_bundles(bundle_names) "{{{
   call neobundle#installer#_load_install_info(bundles)
 
   return filter(copy(bundles), "
-        \  v:val.rtp != '' && !v:val.local
+        \  !v:val.disabled && v:val.path != '' && !v:val.local
         \  && !isdirectory(neobundle#util#expand(v:val.path))
         \")
 endfunction"}}}
@@ -259,7 +304,7 @@ endfunction
 function! neobundle#tap(name) "{{{
   let g:neobundle#tapped = neobundle#get(a:name)
   let g:neobundle#hooks = get(neobundle#get(a:name), 'hooks', {})
-  return !empty(g:neobundle#tapped)
+  return !empty(g:neobundle#tapped) && !g:neobundle#tapped.disabled
 endfunction"}}}
 function! neobundle#untap() "{{{
   let g:neobundle#tapped = {}
@@ -314,6 +359,11 @@ function! neobundle#_get_installed_bundles(bundle_names) "{{{
 
   return filter(copy(bundles),
         \ 'neobundle#config#is_installed(v:val.name)')
+endfunction"}}}
+
+function! neobundle#load_toml(filename, ...) "{{{
+  let opts = get(a:000, 0, {})
+  return neobundle#parser#load_toml(a:filename, opts)
 endfunction"}}}
 
 function! neobundle#get_unite_sources()

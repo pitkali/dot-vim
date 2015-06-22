@@ -71,7 +71,6 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'hewes/unite-gtags'
 NeoBundle 'lukerandall/haskellmode-vim'
 NeoBundle 'wlangstroth/vim-racket'
-NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'tpope/vim-fugitive'
 
 call neobundle#end()
