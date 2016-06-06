@@ -320,6 +320,8 @@ if has("autocmd")
   " Use ghc functionality for haskell files
   au BufEnter *.hs compiler ghc
 
+  autocmd! GUIEnter * set vb t_vb=
+
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
