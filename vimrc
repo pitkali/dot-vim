@@ -79,6 +79,7 @@ NeoBundle 'lukerandall/haskellmode-vim'
 NeoBundle 'nelstrom/vim-textobj-rubyblock'
 NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'rking/ag.vim'
+NeoBundle 'osyo-manga/vim-monster'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'scrooloose/vim-space'
 NeoBundle 'tpope/vim-endwise'
@@ -114,6 +115,7 @@ let g:ctrlp_lazy_update = 50
 
 " --- Neocomplete --- {{{2
 
+let g:acp_enableAtStartup = 0
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
@@ -173,6 +175,16 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" --- Ruby completion {{{2
+
+" Set async completion.
+let g:monster#completion#rcodetools#backend = "async_rct_complete"
+
+" With neocomplete.vim
+let g:neocomplete#sources#omni#input_patterns = {
+\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
+\}
 
 " }}}
 
@@ -298,6 +310,9 @@ if has("autocmd")
 
   " Use 4 space indendation for python (inspired by PEP).
   autocmd FileType python setlocal softtabstop=4 shiftwidth=4
+
+  autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+  autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 
   " Recognise .mm files as Objective-C
   autocmd BufRead,BufNewFile *.mm call s:FTmm()
