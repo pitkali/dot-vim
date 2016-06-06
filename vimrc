@@ -11,7 +11,7 @@ if has('vim_starting')
 
   set fileformats=unix,dos
 
-  " allow backspacing over everything in insert mode
+  " Allow backspacing over everything in insert mode
   set backspace=indent,eol,start
 
   set nobackup
@@ -44,6 +44,10 @@ if has('vim_starting')
   set grepprg=grep\ -niH
 
   set runtimepath+=~/.vim/bundle/neobundle.vim/
+
+  set laststatus=2
+  let mapleader=","
+  let maplocalleader="\\"
 endif
 
 " --- NeoBundle --- {{{1
@@ -61,17 +65,31 @@ NeoBundle 'Shougo/vimproc', {
  \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler.vim'
+NeoBundle 'Shougo/neocomplete.vim'
 
-NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'junegunn/vim-easy-align'
-NeoBundle 'vim-scripts/a.vim'
-NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'ecomba/vim-ruby-refactoring'
+NeoBundle 'ekalinin/Dockerfile.vim'
 NeoBundle 'hewes/unite-gtags'
+NeoBundle 'jnurmine/Zenburn'
+NeoBundle 'junegunn/vim-easy-align'
+NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'lukerandall/haskellmode-vim'
-NeoBundle 'wlangstroth/vim-racket'
+NeoBundle 'nelstrom/vim-textobj-rubyblock'
+NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'rking/ag.vim'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/vim-space'
+NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
+NeoBundle 'vim-scripts/a.vim'
+NeoBundle 'vim-scripts/blockle.vim'
+NeoBundle 'wlangstroth/vim-racket'
 
 call neobundle#end()
 
@@ -93,6 +111,68 @@ let Tlist_Sort_Type = "name"
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_user_command = "find %s -type f -not -path '*.git*' -not -path '*.hg*'"
 let g:ctrlp_lazy_update = 50
+
+" --- Neocomplete --- {{{2
+
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" --- Airline configuration {{{2
+
+" air-line
+let g:airline_powerline_fonts = 0
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_right_sep = '«'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.whitespace = 'Ξ'
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
 
 " }}}
 
@@ -218,9 +298,6 @@ if has("autocmd")
 
   " Use 4 space indendation for python (inspired by PEP).
   autocmd FileType python setlocal softtabstop=4 shiftwidth=4
-
-  " Simple outlining
-  autocmd BufRead,BufNewFile *.org setf outline | set ai foldmethod=syntax
 
   " Recognise .mm files as Objective-C
   autocmd BufRead,BufNewFile *.mm call s:FTmm()
