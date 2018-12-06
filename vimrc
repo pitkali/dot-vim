@@ -351,8 +351,8 @@ if has("gui_running")
   let &lines = 50
 
   set guifont=Consolas:h14
-  :colorscheme solarized
-  set background=light
+  :colorscheme zenburn
+  set background=dark
 endif
 
 " Additional local configuration
