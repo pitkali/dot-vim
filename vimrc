@@ -43,57 +43,70 @@ if has('vim_starting')
 
   set grepprg=grep\ -niH
 
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+  set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
 
   set laststatus=2
-  let mapleader=","
+  let mapleader=" "
   let maplocalleader="\\"
 endif
 
-" --- NeoBundle --- {{{1
+set pyxversion=3
+let g:python_host_prog = "/usr/bin/python"
+let g:python3_host_prog = "/usr/bin/python3"
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+" --- dein --- {{{1
 
-NeoBundle 'Shougo/vimproc', {
- \ 'build' : {
- \     'windows' : 'make -f make_mingw32.mak',
- \     'cygwin' : 'make -f make_cygwin.mak',
- \     'mac' : 'make -f make_mac.mak',
- \     'unix' : 'make -f make_unix.mak',
- \    },
- \ }
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'Shougo/neocomplete.vim'
+if dein#load_state('~/.vim/bundles')
+  call dein#begin('~/.vim/bundles')
 
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'ecomba/vim-ruby-refactoring'
-NeoBundle 'ekalinin/Dockerfile.vim'
-NeoBundle 'elixir-lang/vim-elixir'
-NeoBundle 'hewes/unite-gtags'
-NeoBundle 'jnurmine/Zenburn'
-NeoBundle 'junegunn/vim-easy-align'
-NeoBundle 'kana/vim-textobj-user'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'lukerandall/haskellmode-vim'
-NeoBundle 'nelstrom/vim-textobj-rubyblock'
-NeoBundle 'plasticboy/vim-markdown'
-NeoBundle 'rking/ag.vim'
-NeoBundle 'osyo-manga/vim-monster'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'scrooloose/vim-space'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-NeoBundle 'vim-scripts/a.vim'
-NeoBundle 'vim-scripts/blockle.vim'
-NeoBundle 'wlangstroth/vim-racket'
+  call dein#add('~/.vim/bundles/repos/github.com/Shougo/dein.vim')
+  call dein#add('Shougo/deoplete.nvim')
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
 
-call neobundle#end()
+  call dein#add('wsdjeg/dein-ui.vim')
+  call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
+  call dein#add('Shougo/unite.vim')
+  call dein#add('Shougo/vimfiler.vim')
+  call dein#add('altercation/vim-colors-solarized')
+  call dein#add('ecomba/vim-ruby-refactoring')
+  call dein#add('ekalinin/Dockerfile.vim')
+  call dein#add('elixir-lang/vim-elixir')
+  call dein#add('hewes/unite-gtags')
+  call dein#add('jnurmine/Zenburn')
+  call dein#add('junegunn/vim-easy-align')
+  call dein#add('kana/vim-textobj-user')
+  call dein#add('kien/ctrlp.vim')
+  call dein#add('lukerandall/haskellmode-vim')
+  call dein#add('nelstrom/vim-textobj-rubyblock')
+  call dein#add('plasticboy/vim-markdown')
+  call dein#add('rking/ag.vim')
+  call dein#add('osyo-manga/vim-monster')
+  call dein#add('scrooloose/nerdcommenter')
+  call dein#add('scrooloose/vim-space')
+  call dein#add('tpope/vim-endwise')
+  call dein#add('tpope/vim-fugitive')
+  call dein#add('tpope/vim-repeat')
+  call dein#add('tpope/vim-surround')
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('vim-scripts/a.vim')
+  call dein#add('vim-scripts/blockle.vim')
+  call dein#add('wlangstroth/vim-racket')
+  call dein#add('regedarek/ZoomWin')
+  call dein#add('vim-syntastic/syntastic')
+  call dein#add('rust-lang/rust.vim')
+  call dein#add('fsharp/vim-fsharp', {
+  \ 'build' : 'make fsautocomplete',
+  \ 'lazy' : 1,
+  \ 'on_ft' : 'fsharp',
+  \ })
+
+  call dein#end()
+  call dein#save_state()
+endif
 
 
 set completeopt=menuone,menu,longest,preview
@@ -114,47 +127,17 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_user_command = "find %s -type f -not -path '*.git*' -not -path '*.hg*'"
 let g:ctrlp_lazy_update = 50
 
-" --- Neocomplete --- {{{2
-
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+" --- deoplete --- {{{2
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('camel_case', v:true)
 
 " Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
+inoremap <expr><C-g>     deoplete#undo_completion()
+inoremap <expr><C-l>     deoplete#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> deoplete#smart_close_popup()."\<C-h>"
 
 " --- Airline configuration {{{2
 
@@ -181,11 +164,6 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 
 " Set async completion.
 let g:monster#completion#rcodetools#backend = "async_rct_complete"
-
-" With neocomplete.vim
-let g:neocomplete#sources#omni#input_patterns = {
-\   "ruby" : '[^. *\t]\.\w*\|\h\w*::',
-\}
 
 " }}}
 
@@ -214,7 +192,7 @@ noremap <silent> <Leader>ds :call ToggleLC("trail:·", "trail: ")<CR>
 noremap <silent> <Leader>dt :call ToggleLC("tab:\| ", "tab:  ")<CR>
 
 " Quickly clear highlighted searches
-noremap <Leader>c :nohlsearch<CR>
+noremap <Leader>n :nohlsearch<CR>
 " Reload file from disk
 noremap <Leader>r :e %<CR>
 
@@ -249,9 +227,6 @@ noremap <silent> <Leader>sr :Unite gtags/ref<CR>
 noremap <silent> <Leader>sd :Unite gtags/def<CR>
 noremap <silent> <Leader>sg :Unite gtags/grep<CR>
 noremap <silent> <Leader>sl :Unite gtags/completion<CR>
-
-" YCM
-noremap <silent> <Leader>jd :YcmCompleter GoTo<CR>
 
 " Preview tag under cursor
 noremap <C-\>] <C-W>}
@@ -339,8 +314,6 @@ else
   set autoindent                " always set autoindenting on
 
 endif " has("autocmd") }}}
-
-NeoBundleCheck
 
 
 if has("gui_running")
