@@ -46,7 +46,7 @@ if has('vim_starting')
   set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
 
   set laststatus=2
-  let mapleader=" "
+  let mapleader="\<Space>"
   let maplocalleader="\\"
 endif
 
@@ -202,7 +202,10 @@ noremap <Leader>n :nohlsearch<CR>
 noremap <Leader>r :e %<CR>
 
 " Toggle line wrap faster
-noremap  <Leader>w :set wrap!<CR>
+noremap  <Leader>t :set wrap!<CR>
+
+" I'm so used to this after using it with VSCode.
+noremap <Leader>w :w<CR>
 
 imap <C-a> <C-o>0
 imap <C-e> <C-o>$
