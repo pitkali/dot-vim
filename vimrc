@@ -129,9 +129,14 @@ let g:ctrlp_lazy_update = 50
 
 " --- deoplete --- {{{2
 let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('camel_case', v:true)
+call deoplete#custom#option({
+      \ 'camel_case': v:true,
+      \ 'auto_complete': v:false,
+      \ })
 
 " Plugin key-mappings.
+inoremap <expr><C-@> deoplete#manual_complete()
+inoremap <expr><C-Space> deoplete#manual_complete()
 inoremap <expr><C-g>     deoplete#undo_completion()
 inoremap <expr><C-l>     deoplete#complete_common_string()
 
