@@ -1,22 +1,6 @@
 MY VIM CONFIGURATION
 ====================
 
-My very own Vim configuration, used mostly on Mac OS X with MacVim, comprises
-the following components:
-
-- Zenburn colour scheme
-- OmniCppComplete for C/C++ omni completion
-- NERD tree directory explorer
-- NERD commenter plugin
-- ZoomWin plugin
-- Align and AlignMaps plugins
-- a.vim plugin for switching header/source files quickly
-- Buffer Explorer
-- Mini Buffer Explorer
-- Tag list plugin
-- Task list plugin
-- Cscope maps
-- Outline syntax for folded outlines
-- StackedGit syntax files and filetype plugin
-- Haskell mode
-- FuzzyFinder plugin
+My personal Vim configuration. It has evolved quite a bit since the early
+days. These days it uses dein and a host of modern pluings, requiring Vim8 and
+python support.
