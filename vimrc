@@ -75,7 +75,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('ekalinin/Dockerfile.vim')
   call dein#add('elixir-lang/vim-elixir')
   call dein#add('hewes/unite-gtags')
-  call dein#add('jnurmine/Zenburn')
+  call dein#add('vim-scripts/jnurminenZenburn')
   call dein#add('junegunn/vim-easy-align')
   call dein#add('kana/vim-textobj-user')
   call dein#add('kien/ctrlp.vim')
@@ -201,7 +201,7 @@ noremap <Leader>n :nohlsearch<CR>
 noremap <Leader>r :e %<CR>
 
 " Toggle line wrap faster
-noremap  <Leader>t :set wrap!<CR>
+noremap  <Leader>q :set wrap!<CR>
 
 " I'm so used to this after using it with VSCode.
 noremap <Leader>w :w<CR>
@@ -332,8 +332,8 @@ if has("gui_running")
   let &lines = 50
 
   set guifont=Consolas:h14
-  :colorscheme zenburn
   set background=dark
+  :colorscheme zenburn
 endif
 
 " Additional local configuration
