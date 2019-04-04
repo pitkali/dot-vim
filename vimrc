@@ -328,8 +328,13 @@ if has("gui_running")
   let &guioptions = substitute(&guioptions, "t", "", "g")
   set guioptions-=T
 
-  let &columns = 100
-  let &lines = 50
+  if &diff
+    let &columns = 240
+    let &lines = 60
+  else
+    let &columns = 100
+    let &lines = 50
+  endif
 
   set guifont=Consolas:h14
   set background=dark
