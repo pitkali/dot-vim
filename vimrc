@@ -43,7 +43,11 @@ if has('vim_starting')
 
   set grepprg=grep\ -niH
 
+  let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
   set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
+  execute "set rtp+=" . g:opamshare . "/merlin/vim"
+  execute "set rtp^=" . g:opamshare . "/ocp-index/vim"
+  execute "set rtp^=" . g:opamshare . "/ocp-indent/vim"
 
   set laststatus=2
   let mapleader="\<Space>"
