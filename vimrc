@@ -50,9 +50,26 @@ if has('vim_starting')
   let maplocalleader="\\"
 endif
 
-set pyxversion=3
-let g:python_host_prog = "/usr/local/bin/python"
-let g:python3_host_prog = "/usr/local/bin/python3"
+" Picks the first working executable
+function! s:PickExecutable(...)
+  for e in a:000
+    if executable(e)
+      return e
+    endif
+  endfor
+  echomsg "No suitable executable found for " . a:0
+  return ""
+endfunction
+
+let g:python_host_prog = s:PickExecutable(
+      \'python', '/usr/local/bin/python', '/usr/bin/python')
+let g:python3_host_prog = s:PickExecutable(
+      \'python3', '/usr/local/bin/python3', '/usr/bin/python3')
+if len(g:python3_host_prog)
+  set pyxversion=3
+else
+  set pyxversion=2
+endif
 
 " --- dein --- {{{1
 
