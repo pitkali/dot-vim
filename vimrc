@@ -43,11 +43,7 @@ if has('vim_starting')
 
   set grepprg=grep\ -niH
 
-  let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
   set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
-  execute "set rtp+=" . g:opamshare . "/merlin/vim"
-  execute "set rtp^=" . g:opamshare . "/ocp-index/vim"
-  execute "set rtp^=" . g:opamshare . "/ocp-indent/vim"
 
   set laststatus=2
   let mapleader="\<Space>"
@@ -310,6 +306,16 @@ if has("autocmd")
 
   " Use ghc functionality for haskell files
   au BufEnter *.hs compiler ghc
+
+  if executable('opam')
+    let s:opam = substitute(system('opam config var share'), '\n$', '', '''')
+    if executable('ocamlmerlin') && has('python')
+      let s:ocamlmerlin = s:opam . "/merlin"
+      execute "set rtp+=".s:ocamlmerlin."/vim"
+      execute "set rtp+=".s:ocamlmerlin."/vimbufsync"
+    endif
+    autocmd FileType ocaml execute "set rtp+=" . s:opam . "/ocp-indent/vim/indent/ocaml.vim"
+  endif
 
   autocmd! GUIEnter * set vb t_vb=
 
