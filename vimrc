@@ -101,6 +101,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('kana/vim-textobj-user')
   call dein#add('kien/ctrlp.vim')
   call dein#add('lukerandall/haskellmode-vim')
+  call dein#add('majutsushi/tagbar')
   call dein#add('nelstrom/vim-textobj-rubyblock')
   call dein#add('plasticboy/vim-markdown')
   call dein#add('rking/ag.vim')
@@ -135,14 +136,9 @@ endif
 set completeopt=menuone,menu,longest,preview
 
 " --- Plugin options   --- {{{1
-" --- Tag list options --- {{{2
 
-let Tlist_Ctags_Cmd = s:PickExecutable('ctags')
-let Tlist_Use_Right_Window = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_Enable_Fold_Column = 0
-let Tlist_Close_On_Select = 1
-let Tlist_Sort_Type = "name"
+let g:tagbar_autofocus = 1
+let g:tagbar_autoclose = 1
 
 " --- CtrlP options --- {{{2
 
@@ -245,7 +241,7 @@ noremap <silent> <S-F2> :Unite -start-insert buffer_tab<CR>
 inoremap <silent> <S-F2> <C-o><S-F2>
 
 " Tag list
-noremap <silent> <F3> :TlistToggle<CR>
+noremap <silent> <F3> :TagbarToggle<CR>
 imap <silent> <F3> <C-o><F3>
 
 " File explorer
