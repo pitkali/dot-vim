@@ -50,9 +50,11 @@ if has('vim_starting')
   let maplocalleader="\\"
 endif
 
-" Picks the first working executable
-function! s:PickExecutable(...)
-  for e in a:000
+" Finds an executable. Tries to use PATH first, then some builtin
+" absolute paths, and then tries the remaining supplied paths.
+function! s:PickExecutable(prog, ...)
+  let l:candidates = [a:prog, '/usr/local/bin' . a:prog, '/usr/bin' . a:prog]
+  for e in l:candidates + a:000
     if executable(e)
       return e
     endif
@@ -61,10 +63,8 @@ function! s:PickExecutable(...)
   return ""
 endfunction
 
-let g:python_host_prog = s:PickExecutable(
-      \'python', '/usr/local/bin/python', '/usr/bin/python')
-let g:python3_host_prog = s:PickExecutable(
-      \'python3', '/usr/local/bin/python3', '/usr/bin/python3')
+let g:python_host_prog = s:PickExecutable('python')
+let g:python3_host_prog = s:PickExecutable('python3')
 if len(g:python3_host_prog)
   set pyxversion=3
 else
@@ -137,7 +137,7 @@ set completeopt=menuone,menu,longest,preview
 " --- Plugin options   --- {{{1
 " --- Tag list options --- {{{2
 
-let Tlist_Ctags_Cmd = '/usr/local/bin/ctags'
+let Tlist_Ctags_Cmd = s:PickExecutable('ctags')
 let Tlist_Use_Right_Window = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
 let Tlist_Enable_Fold_Column = 0
