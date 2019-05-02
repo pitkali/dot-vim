@@ -74,10 +74,12 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('ecomba/vim-ruby-refactoring')
   call dein#add('ekalinin/Dockerfile.vim')
   call dein#add('elixir-lang/vim-elixir')
+  call dein#add('guns/vim-sexp')
   call dein#add('hewes/unite-gtags')
   call dein#add('inkarkat/vim-ingo-library')
   call dein#add('inkarkat/vim-visualrepeat')
   call dein#add('jnurmine/Zenburn')
+  call dein#add('juanchanco/vim-jbuilder')
   call dein#add('junegunn/vim-easy-align')
   call dein#add('kana/vim-textobj-user')
   call dein#add('kien/ctrlp.vim')
@@ -92,6 +94,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-repeat')
   call dein#add('tpope/vim-surround')
+  call dein#add('tpope/vim-sexp-mappings-for-regular-people')
   call dein#add('vim-airline/vim-airline')
   call dein#add('vim-airline/vim-airline-themes')
   call dein#add('vim-scripts/blockle.vim')
@@ -180,6 +183,9 @@ let python_highlight_all = 1
 " Configure browser for haskell_doc.vim
 let g:haddock_browser = "open"
 let g:haddock_browser_callformat = "%s %s"
+
+" Enable sexp editing in dune files
+let g:sexp_filetypes = 'scheme,lisp,clojure,jbuilder'
 
 " --- Helper functions --- {{{1
 
