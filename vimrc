@@ -83,11 +83,11 @@ if dein#load_state('~/.vim/bundles')
     call dein#add('roxma/vim-hug-neovim-rpc')
   endif
 
-  call dein#add('wsdjeg/dein-ui.vim')
   call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
   call dein#add('Shougo/unite.vim')
   call dein#add('Shougo/vimfiler.vim')
   call dein#add('altercation/vim-colors-solarized')
+  call dein#add('chrisbra/NrrwRgn')
   call dein#add('ecomba/vim-ruby-refactoring')
   call dein#add('ekalinin/Dockerfile.vim')
   call dein#add('elixir-lang/vim-elixir')
@@ -95,6 +95,8 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('hewes/unite-gtags')
   call dein#add('inkarkat/vim-ingo-library')
   call dein#add('inkarkat/vim-visualrepeat')
+  call dein#add('inkarkat/vim-SyntaxRange')
+  call dein#add('jceb/vim-orgmode')
   call dein#add('jnurmine/Zenburn')
   call dein#add('juanchanco/vim-jbuilder')
   call dein#add('junegunn/vim-easy-align')
@@ -102,6 +104,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('kien/ctrlp.vim')
   call dein#add('lukerandall/haskellmode-vim')
   call dein#add('majutsushi/tagbar')
+  call dein#add('mattn/calendar-vim')
   call dein#add('nelstrom/vim-textobj-rubyblock')
   call dein#add('plasticboy/vim-markdown')
   call dein#add('rking/ag.vim')
@@ -111,6 +114,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('tpope/vim-endwise')
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-repeat')
+  call dein#add('tpope/vim-speeddating')
   call dein#add('tpope/vim-surround')
   call dein#add('tpope/vim-sexp-mappings-for-regular-people')
   call dein#add('vim-airline/vim-airline')
@@ -118,6 +122,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('vim-scripts/blockle.vim')
   call dein#add('vim-scripts/CountJump')
   call dein#add('vim-scripts/ConflictMotions')
+  call dein#add('vim-scripts/utl.vim')
   call dein#add('wlangstroth/vim-racket')
   call dein#add('regedarek/ZoomWin')
   call dein#add('vim-syntastic/syntastic')
@@ -219,7 +224,7 @@ noremap <silent> <Leader>ds :call ToggleLC("trail:·", "trail: ")<CR>
 noremap <silent> <Leader>dt :call ToggleLC("tab:\| ", "tab:  ")<CR>
 
 " Quickly clear highlighted searches
-noremap <Leader>n :nohlsearch<CR>
+noremap <Leader>c :nohlsearch<CR>
 " Reload file from disk
 noremap <Leader>r :e %<CR>
 
