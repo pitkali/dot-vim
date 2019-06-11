@@ -380,6 +380,7 @@ endif
 
 set guifont=Consolas:h14
 set background=dark
+let g:zenburn_high_Contrast=1
 :colorscheme zenburn
 
 " Additional local configuration
