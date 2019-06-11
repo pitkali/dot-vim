@@ -65,10 +65,12 @@ endfunction
 
 let g:python_host_prog = s:PickExecutable('python')
 let g:python3_host_prog = s:PickExecutable('python3')
-if len(g:python3_host_prog)
-  set pyxversion=3
-else
-  set pyxversion=2
+if !has("nvim")
+  if len(g:python3_host_prog)
+    set pyxversion=3
+  else
+    set pyxversion=2
+  endif
 endif
 
 " --- dein --- {{{1
@@ -374,11 +376,11 @@ if has("gui_running")
     let &columns = 100
     let &lines = 50
   endif
-
-  set guifont=Consolas:h14
-  set background=dark
-  :colorscheme zenburn
 endif
+
+set guifont=Consolas:h14
+set background=dark
+:colorscheme zenburn
 
 " Additional local configuration
 let s:localvimrc = expand("~/.vim/localrc")
