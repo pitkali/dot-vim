@@ -151,7 +151,7 @@ let g:tagbar_autoclose = 1
 " --- CtrlP options --- {{{2
 
 let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_user_command = "find %s -type f -not -path '*.git*' -not -path '*.hg*'"
+let g:ctrlp_user_command = "rg --files %s"
 let g:ctrlp_lazy_update = 50
 
 " --- deoplete --- {{{2
