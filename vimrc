@@ -91,7 +91,6 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('altercation/vim-colors-solarized')
   call dein#add('chrisbra/NrrwRgn')
   call dein#add('ciaranm/securemodelines')
-  call dein#add('ctrlpvim/ctrlp.vim')
   call dein#add('ecomba/vim-ruby-refactoring')
   call dein#add('ekalinin/Dockerfile.vim')
   call dein#add('elixir-lang/vim-elixir')
@@ -103,6 +102,8 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('jceb/vim-orgmode')
   call dein#add('jnurmine/Zenburn')
   call dein#add('juanchanco/vim-jbuilder')
+  call dein#add('junegunn/fzf', {'path' : '~/.fzf', 'build' : './install --all'})
+  call dein#add('junegunn/fzf.vim')
   call dein#add('junegunn/vim-easy-align')
   call dein#add('kana/vim-textobj-user')
   call dein#add('lukerandall/haskellmode-vim')
@@ -135,7 +136,6 @@ if dein#load_state('~/.vim/bundles')
   \ 'lazy' : 1,
   \ 'on_ft' : 'fsharp',
   \ })
-
   call dein#end()
   call dein#save_state()
 endif
@@ -147,12 +147,6 @@ set completeopt=menuone,menu,longest,preview
 
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
-
-" --- CtrlP options --- {{{2
-
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_user_command = "rg --files %s"
-let g:ctrlp_lazy_update = 50
 
 " --- deoplete --- {{{2
 let g:deoplete#enable_at_startup = 1
@@ -255,6 +249,10 @@ imap <silent> <F3> <C-o><F3>
 " File explorer
 noremap <silent> <F4> :VimFilerExplorer<CR>
 imap <silent> <F4> <C-o><F4>
+
+" Fuzzy finding
+noremap <silent> <Leader>e :Files<CR>
+noremap <silent> <C-p> :History<CR>
 
 " Choose different file from the same directory
 noremap <silent> <Leader>f :Unite -start-insert file<CR>
