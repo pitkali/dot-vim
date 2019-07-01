@@ -49,6 +49,9 @@ if has('vim_starting')
 
   set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
 
+  " Used by a number of completion plugins
+  set hidden
+
   set laststatus=2
   let mapleader="\<Space>"
   let maplocalleader="\\"
@@ -84,10 +87,16 @@ if dein#load_state('~/.vim/bundles')
 
   call dein#add('~/.vim/bundles/repos/github.com/Shougo/dein.vim')
   call dein#add('Shougo/deoplete.nvim')
-  if !has('nvim')
+  if has('nvim')
+  else
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-neovim-rpc')
   endif
+  call dein#add('Shougo/deoplete-clangx')
+  call dein#add('Shougo/neco-vim')
+  call dein#add('copy/deoplete-ocaml')
+  call dein#add('deoplete-plugins/deoplete-jedi')
+  call dein#add('deoplete-plugins/deoplete-zsh')
 
   call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
   call dein#add('Shougo/unite.vim')
@@ -189,13 +198,6 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-
-" --- Ruby completion {{{2
-
-" Set async completion.
-let g:monster#completion#rcodetools#backend = "async_rct_complete"
-
-" }}}
 
 let python_highlight_all = 1
 
@@ -326,9 +328,6 @@ if has("autocmd")
 
   " Use 4 space indendation for python (inspired by PEP).
   autocmd FileType python setlocal softtabstop=4 shiftwidth=4
-
-  autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-  autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 
   " Recognise .mm files as Objective-C
   autocmd BufRead,BufNewFile *.mm call s:FTmm()
