@@ -42,6 +42,10 @@ if has('vim_starting')
   set list
 
   set grepprg=grep\ -niH
+  if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+  endif
 
   set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
 
