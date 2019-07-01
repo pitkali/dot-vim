@@ -94,6 +94,7 @@ if dein#load_state('~/.vim/bundles')
   endif
   call dein#add('Shougo/deoplete-clangx')
   call dein#add('Shougo/neco-vim')
+  call dein#add('Shougo/neoinclude.vim')
   call dein#add('copy/deoplete-ocaml')
   call dein#add('deoplete-plugins/deoplete-jedi')
   call dein#add('deoplete-plugins/deoplete-zsh')
