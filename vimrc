@@ -200,6 +200,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
+" }}}
+
 let python_highlight_all = 1
 
 " Configure browser for haskell_doc.vim
@@ -380,7 +382,10 @@ if has("gui_running")
   endif
 endif
 
-set guifont=Consolas:h14
+if !has("gui_vimr")
+  set guifont=Consolas:h14
+endif
+
 set background=dark
 let g:zenburn_high_Contrast=1
 :colorscheme zenburn
