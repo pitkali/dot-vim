@@ -108,6 +108,7 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('ecomba/vim-ruby-refactoring')
   call dein#add('ekalinin/Dockerfile.vim')
   call dein#add('elixir-lang/vim-elixir')
+  call dein#add('eugen0329/vim-esearch')
   call dein#add('guns/vim-sexp')
   call dein#add('hewes/unite-gtags')
   call dein#add('inkarkat/vim-ingo-library')
@@ -158,6 +159,8 @@ endif
 set completeopt=menuone,menu,longest,preview
 
 " --- Plugin options   --- {{{1
+
+let g:esearch = { 'adapter': 'rg' }
 
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
@@ -247,9 +250,6 @@ imap <silent> <F4> <C-o><F4>
 " Fuzzy finding
 noremap <silent> <Leader>e :Files<CR>
 noremap <silent> <C-p> :History<CR>
-
-" Choose different file from the same directory
-noremap <silent> <Leader>f :Unite -start-insert file<CR>
 
 " GNU Global
 noremap <silent> <Leader>sc :Unite gtags/context<CR>
