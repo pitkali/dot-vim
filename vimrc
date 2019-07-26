@@ -109,6 +109,9 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('ekalinin/Dockerfile.vim')
   call dein#add('elixir-lang/vim-elixir')
   call dein#add('eugen0329/vim-esearch')
+  call dein#add('google/vim-codefmt', { 'merged': 0 })
+  call dein#add('google/vim-glaive', { 'merged': 0 })
+  call dein#add('google/vim-maktaba', { 'merged': 0 })
   call dein#add('guns/vim-sexp')
   call dein#add('hewes/unite-gtags')
   call dein#add('inkarkat/vim-ingo-library')
@@ -155,10 +158,13 @@ if dein#load_state('~/.vim/bundles')
   call dein#save_state()
 endif
 
+call glaive#Install()
 
 set completeopt=menuone,menu,longest,preview
 
 " --- Plugin options   --- {{{1
+
+Glaive codefmt plugin[mappings]
 
 let g:esearch = { 'adapter': 'rg' }
 
