@@ -100,7 +100,6 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('deoplete-plugins/deoplete-zsh')
 
   call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
-  call dein#add('Shougo/unite.vim')
   call dein#add('Shougo/vimfiler.vim')
   call dein#add('altercation/vim-colors-solarized')
   call dein#add('chrisbra/NrrwRgn')
@@ -113,7 +112,6 @@ if dein#load_state('~/.vim/bundles')
   call dein#add('google/vim-glaive', { 'merged': 0 })
   call dein#add('google/vim-maktaba', { 'merged': 0 })
   call dein#add('guns/vim-sexp')
-  call dein#add('hewes/unite-gtags')
   call dein#add('inkarkat/vim-ingo-library')
   call dein#add('inkarkat/vim-visualrepeat')
   call dein#add('inkarkat/vim-SyntaxRange')
@@ -239,11 +237,8 @@ imap <C-e> <C-o>$
 
 
 " Buffer explorer
-noremap <silent> <F2> :Unite -start-insert buffer<CR>
+noremap <silent> <F2> :Buffers<CR>
 inoremap <silent> <F2> <C-o><F2>
-
-noremap <silent> <S-F2> :Unite -start-insert buffer_tab<CR>
-inoremap <silent> <S-F2> <C-o><S-F2>
 
 " Tag list
 noremap <silent> <F3> :TagbarToggle<CR>
@@ -256,13 +251,6 @@ imap <silent> <F4> <C-o><F4>
 " Fuzzy finding
 noremap <silent> <Leader>e :Files<CR>
 noremap <silent> <C-p> :History<CR>
-
-" GNU Global
-noremap <silent> <Leader>sc :Unite gtags/context<CR>
-noremap <silent> <Leader>sr :Unite gtags/ref<CR>
-noremap <silent> <Leader>sd :Unite gtags/def<CR>
-noremap <silent> <Leader>sg :Unite gtags/grep<CR>
-noremap <silent> <Leader>sl :Unite gtags/completion<CR>
 
 " Preview tag under cursor
 noremap <C-\>] <C-W>}
