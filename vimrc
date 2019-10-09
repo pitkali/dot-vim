@@ -92,12 +92,14 @@ if dein#load_state('~/.vim/bundles')
     call dein#add('roxma/nvim-yarp')
     call dein#add('roxma/vim-hug-neovim-rpc')
   endif
-  call dein#add('Shougo/deoplete-clangx')
   call dein#add('Shougo/neco-vim')
   call dein#add('Shougo/neoinclude.vim')
   call dein#add('copy/deoplete-ocaml')
   call dein#add('deoplete-plugins/deoplete-jedi')
   call dein#add('deoplete-plugins/deoplete-zsh')
+
+  call dein#add('autozimu/LanguageClient-neovim', {
+        \ 'rev' : 'next', 'build' : 'bash install.sh'})
 
   call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
   call dein#add('Shougo/vimfiler.vim')
@@ -187,6 +189,20 @@ inoremap <expr><C-l>     deoplete#complete_common_string()
 inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> deoplete#smart_close_popup()."\<C-h>"
 
+" --- Language servers --- {{{2
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gr :call LanguageClient#textDocument_references({
+      \ 'includeDeclaration': v:false})<cr>
+
+let g:LanguageClient_serverCommands = {
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
+    \ }
+
 " --- Airline configuration {{{2
 
 " air-line
@@ -254,10 +270,7 @@ noremap <silent> <Leader>e :Files<CR>
 noremap <silent> <C-p> :History<CR>
 
 " Preview tag under cursor
-noremap <C-\>] <C-W>}
-imap <C-\>] <C-o><C-\>]
-noremap <C-\>} :pclose<CR>
-imap <C-\>} <C-o><C-\>}
+noremap <Leader>k :pclose<CR>
 
 " Toggle input mode with M-Space
 inoremap <M-Space> <Esc>
@@ -314,6 +327,8 @@ if has("autocmd")
 
   " Recognise .mm files as Objective-C
   autocmd BufRead,BufNewFile *.mm call s:FTmm()
+
+  au FileType c,cpp,cuda,objc setl formatexpr=LanguageClient#textDocument_rangeFormatting()
 
   " Use ghc functionality for haskell files
   au BufEnter *.hs compiler ghc
