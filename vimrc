@@ -231,6 +231,13 @@ function! ToggleLC(v1, v2)
   endif
 endfunction
 
+function! ToggleZenburnContrast()
+  let g:zenburn_high_Contrast = g:zenburn_high_Contrast ? 0 : 1
+  :colorscheme zenburn
+endfunction
+
+command ZT call ToggleZenburnContrast()
+
 " --- Key bindings --- {{{1
 
 " Toggle display of trailing spaces
@@ -244,7 +251,10 @@ noremap <Leader>c :nohlsearch<CR>
 noremap <Leader>r :e %<CR>
 
 " Toggle line wrap faster
-noremap  <Leader>q :set wrap!<CR>
+noremap  <Leader>dq :set wrap!<CR>
+
+" Zenburn contrast toggle, as I can't ever decide on one.
+noremap <Leader>dz :ZT<CR>
 
 " I'm so used to this after using it with VSCode.
 noremap <Leader>w :w<CR>
