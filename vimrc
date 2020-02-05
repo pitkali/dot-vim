@@ -202,6 +202,7 @@ let g:LanguageClient_serverCommands = {
     \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
     \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
     \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'ocaml': ['ocamllsp'],
     \ }
 
 " --- Airline configuration {{{2
@@ -237,7 +238,7 @@ function! ToggleZenburnContrast()
   :colorscheme zenburn
 endfunction
 
-command ZT call ToggleZenburnContrast()
+command! ZT call ToggleZenburnContrast()
 
 " --- Key bindings --- {{{1
 
