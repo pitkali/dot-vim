@@ -70,7 +70,7 @@ function! s:PickExecutable(prog, ...)
   return ""
 endfunction
 
-if has('windows')
+if has('win32')
   let g:python3_host_prog = 'python.exe'
 else
   let g:python_host_prog = s:PickExecutable('python')
