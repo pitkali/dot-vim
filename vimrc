@@ -386,8 +386,12 @@ if has("gui_running")
   endif
 endif
 
-if !has("gui_vimr")
+if has("win32")
+  set guifont=Fira\ Code:h11
+elseif has("unix")
   set guifont=Fira\ Code\ weight=450\ 11
+elseif has("macunix")
+  set guifont=FiraCode-Retina:h14
 endif
 
 set background=dark
